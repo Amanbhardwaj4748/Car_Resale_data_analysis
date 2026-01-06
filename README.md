@@ -3,7 +3,7 @@ I have completed this project using Postgre SQL. I have written the SQL queries 
 # SQL Queries 
 
 ## To Create a Table into the database
-'''sql
+```sql
 DROP TABLE IF EXISTS Cars;
 CREATE TABLE Cars (
 city VARCHAR(50),
@@ -223,4 +223,3 @@ SELECT no_of_owners,
 FROM cars
 GROUP BY no_of_owners
 ORDER BY no_of_owners;
-'''
