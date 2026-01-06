@@ -1,9 +1,9 @@
 # Car_Resale_data_analysis
 I have completed this project using Postgre SQL. I have written the SQL queries to find out the answer of the question that helped me to analyze the data. In this project, i have answered 15 questions  that really helped me to findout the result that i suppoesed to find out.
 # SQL Queries 
-'''sql
-## To Create a Table into the database
 
+## To Create a Table into the database
+'''sql
 DROP TABLE IF EXISTS Cars;
 CREATE TABLE Cars (
 city VARCHAR(50),
@@ -115,7 +115,7 @@ FROM Cars
 )
 where rank=1
 ;
-
+# Age & Depreciation
 ## 9. How does car price decrease with age (make_year vs price) 
 select * FROM (
 select make_year,
@@ -153,7 +153,7 @@ FROM cars
 		WHEN make_year>2020 THEN 'Newer Cars'
 		ELSE 'Older Cars'
 		END;
-
+# Mileage Impact
 ## 12.How does mileage affect car price?
 SELECT * FROM cars; 
 SELECT 
@@ -214,11 +214,13 @@ FROM cars
 			mileage
 ) 
 where rnk<=5;
-
+# Ownership & Condition
 ## 15.	How does number of owners impact price?
+
 SELECT no_of_owners,
 		ROUND(AVG(price)::numeric,2) as avg_price,
 		Count(*) as total_cars
 FROM cars
 GROUP BY no_of_owners
 ORDER BY no_of_owners;
+'''
