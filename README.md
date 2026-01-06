@@ -3,6 +3,7 @@ I have completed this project using Postgre SQL. I have written the SQL queries 
 # SQL Queries 
 ## To Create a Table into the database
 '''sql
+
 DROP TABLE IF EXISTS Cars;
 CREATE TABLE Cars (
 city VARCHAR(50),
