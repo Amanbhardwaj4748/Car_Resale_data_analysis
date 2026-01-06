@@ -1,8 +1,8 @@
 # Car_Resale_data_analysis
 I have completed this project using Postgre SQL. I have written the SQL queries to find out the answer of the question that helped me to analyze the data. In this project, i have answered 15 questions  that really helped me to findout the result that i suppoesed to find out.
 # SQL Queries 
-## To Create a Table into the database
 '''sql
+## To Create a Table into the database
 
 DROP TABLE IF EXISTS Cars;
 CREATE TABLE Cars (
@@ -26,22 +26,17 @@ SELECT * FROM Cars;
 SELECT COUNT(*) FROM Cars;
 
 /*
-		Exploratory Data Analysis
-	** Market Overview and Supply**
-1.	Which city has the highest number of listed cars?
-2.	What are the top 10 car makers by number of listings?
-3.	Which models are most frequently sold in each city?
-4.	What is the distribution of body types (SUV, Sedan, Hatchback)?
-*/
+# Exploratory Data Analysis
 
--- 1.	Which city has the highest number of listed cars? --
-	SELECT City, Count(*) as Quantity,
-			RANK() OVER (ORDER BY Count(*) DESC) AS Rank
-	FROM Cars
-		Group by City
-		Limit 1;
+## 1.	Which city has the highest number of listed cars? 
 
--- 2.	What are the top 10 car makers by number of listings? --
+SELECT City, Count(*) as Quantity,
+		RANK() OVER (ORDER BY Count(*) DESC) AS Rank
+FROM Cars
+	Group by City
+	Limit 1;
+
+## 2.	What are the top 10 car makers by number of listings?
 
 SELECT maker, COUNT(*) AS Quantity,
 		RANK() OVER(ORDER BY COUNT(*) DESC) AS RANK
@@ -49,7 +44,8 @@ FROM Cars
 	GROUP BY maker
 	LIMIT 10;
 
--- 3.	Which models are most frequently sold in each city? --
+## 3.	Which models are most frequently sold in each city?
+
 SELECT city,model, Quantity
 FROM
 		(
@@ -64,20 +60,16 @@ FROM
 	WHERE Rank=1;
 	;
 
--- 4.	What is the distribution of body types (SUV, Sedan, Hatchback)?--
+## 4.	What is the distribution of body types (SUV, Sedan, Hatchback)?
 
 SELECT body_type, COUNT(*) as total_sales FROM Cars
 GROUP BY 1
 ORDER BY 2 DESC;
 
-/* Pricing Analysis
-5.	What is the average, median, and range of car prices overall?
-6.	How does price vary by maker (Hyundai vs Maruti vs Honda)?
-7.	Which models give the best value (lowest price for newer make_year)?
-8.	How does price differ by body type (SUV vs Sedan vs Hatchback)?
-*/
+ # Pricing Analysis
 
--- 5.	What is the average, median, and range of car prices overall? --
+## 5.	What is the average, median, and range of car prices overall?
+
 SELECT 
 	ROUND(AVG(price)::NUMERIC, 2) AS avg_price,
 	MAX(price)-MIN(price) as range_price,
@@ -85,7 +77,7 @@ SELECT
         WITHIN GROUP (ORDER BY price) AS median_price
 FROM Cars;
 
---6.	How does price vary by maker (Hyundai vs Maruti vs Honda)?--
+## 6.	How does price vary by maker (Hyundai vs Maruti vs Honda)?
 SELECT maker, 
 		ROUND(AVG(price)::NUMERIC,2) AS AVG_price
 FROM Cars
@@ -93,7 +85,7 @@ WHERE maker IN ('Hyundai','Maruti Suzuki','Honda')
 GROUP BY maker
 ORDER BY 2 DESC;
 
---7.	Which models give the best value (lowest price for newer make_year)?--
+## 7.	Which models give the best value (lowest price for newer make_year)?
 WITH ranked_cars AS (
 SELECT 	maker,
 		model,
@@ -111,7 +103,7 @@ SELECT maker,
 FROM ranked_cars
 WHERE value_rank=1;
 
--- 8.	How does price differ by body type (SUV vs Sedan vs Hatchback)?--
+## 8.	How does price differ by body type (SUV vs Sedan vs Hatchback)?
 SELECT * FROM Cars;
 SELECT * FROM (
 SELECT	body_type,
@@ -124,12 +116,7 @@ FROM Cars
 where rank=1
 ;
 
-/* 	 9.	How does car price decrease with age (make_year vs price)?
-	10.	What is the average price drop per year for each maker?
-	11.	Are newer cars (2020+) priced significantly higher than older ones?
-*/
-
--- 9. How does car price decrease with age (make_year vs price)--
+## 9. How does car price decrease with age (make_year vs price) 
 select * FROM (
 select make_year,
 		body_type,
@@ -141,7 +128,7 @@ from cars
 )
 WHERE rank=1;
 
---10. What is the average price drop per year for each maker?--
+## 10. What is the average price drop per year for each maker?
 select * from cars;
 
 select maker,
@@ -152,7 +139,7 @@ GROUP BY 1,2
 ORDER BY 2 ASC
 ; 
 
---11.	Are newer cars (2020+) priced significantly higher than older ones?--
+## 11.	Are newer cars (2020+) priced significantly higher than older ones?
 SELECT 
 	CASE
 		WHEN make_year>2020 THEN 'Newer Cars'
@@ -166,11 +153,8 @@ FROM cars
 		WHEN make_year>2020 THEN 'Newer Cars'
 		ELSE 'Older Cars'
 		END;
-/*12.	How does mileage affect car price?
-13.	At what mileage range does price drop sharply?
-14.	Which makers retain higher prices even at high mileage? */
 
---12.How does mileage affect car price?--
+## 12.How does mileage affect car price?
 SELECT * FROM cars; 
 SELECT 
 	CASE
@@ -190,7 +174,7 @@ GROUP BY
 		ELSE 'Above 100k Kms'
 	END
 ORDER BY 3 DESC;
---13.	At what mileage range does price drop sharply?--
+## 13.	At what mileage range does price drop sharply?
 
 WITH mileage_buckets AS (
     SELECT
@@ -218,7 +202,7 @@ SELECT *
 FROM mileage_buckets
 ORDER BY avg_price DESC;
 
---14.	Which makers retain higher prices even at high mileage?--
+## 14.	Which makers retain higher prices even at high mileage?
 SELECT * FROM (
 SELECT maker,
 		mileage,
@@ -231,7 +215,7 @@ FROM cars
 ) 
 where rnk<=5;
 
---15.	How does number of owners impact price?--
+## 15.	How does number of owners impact price?
 SELECT no_of_owners,
 		ROUND(AVG(price)::numeric,2) as avg_price,
 		Count(*) as total_cars
