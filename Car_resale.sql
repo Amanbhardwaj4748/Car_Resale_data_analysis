@@ -136,15 +136,26 @@ from cars
 WHERE rank=1;
 
 --10. What is the average price drop per year for each maker?--
-select * from cars;
-
-select maker,
-		make_year,
-		Avg(price) as Avg_price
-FROM cars
-GROUP BY 1,2
-ORDER BY 2 ASC
-; 
+WITH car_age AS (
+  SELECT
+    maker,
+    price,
+    (2025 - make_year) AS age
+  FROM cars
+  WHERE make_year IS NOT NULL
+    AND price IS NOT NULL
+)
+SELECT
+  maker,
+  ROUND(
+    ABS(
+      REGR_SLOPE(price, age)
+    )
+  ) AS avg_price_drop_per_year
+FROM car_age
+GROUP BY maker
+ORDER BY avg_price_drop_per_year;
+ 
 
 --11.	Are newer cars (2020+) priced significantly higher than older ones?--
 SELECT 
